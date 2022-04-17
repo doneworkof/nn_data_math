@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="../css/popup.css" rel="stylesheet" type="text/css">
+        <link href="../css/article.css" rel="stylesheet" type="text/css">
+        <link href="../css/style.css" rel="stylesheet" type="text/css">    
+        <link href="../css/menu.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <main>
+            <div class="content">
+                <div class="article">
+                    <h1>Линейная регрессия</h1>
+                    <p>Привет, братан. Сегодня поговорим о линейной регрессии. Что это вообще такое и почему это нужно всем, в том числе и тебе??</p>
+                    <p>Вот допустим, у тебя есть функция `y=ax + b`. Коэффициент `a` и свободный член `b` не известны. Но у тебя есть несколько точек, через которые проходит этот график. Как же найти `a` и `b`? </p>
+                    <p>Бро, рассмотрим первый случай, если у тебя есть 2 конкретные точки, через которые проходит наша прямая. Тогда выведем формулу для нахождения `a` и `b`:</p>
+                    <span class="math display">
+                        $$
+                        \begin{cases}
+                            y_1=ax_1+b \\
+                            y_2=ax_2+b
+                        \end{cases} \\
+        
+                        \begin{cases}
+                            b=y_1-ax_1 \\
+                            b=y_2-ax_2
+                        \end{cases} \\
+        
+                        y_1-ax_1=y_2-ax_2 \\
+                        
+                        y_1-y_2=ax_1-ax_2 \\
+        
+                        y_1-y_2=a(x_1-x_2) \\
+                        
+                        a=\frac{y_1-y_2}{x_1-x_2} \\
+                        
+                        b=y_1-ax_1
+                        $$
+                    </span>
+                    <p>Хорошо, это было довольно просто. Но что если у вас есть множество точек и стоит задача провести прямую, проходящую через их наибольшее количество?</p>
+                    <img res="_x250" src="https://miro.medium.com/max/1200/1*Cw5ZSYDkIFpmhBwr-hN84A.png">
+                    <img res="_x250" src="https://miro.medium.com/max/1400/1*KwdVLH5e_P9h8hEzeIPnTg.png">
+                    <p>То есть провести прямую таким образом, как показано выше.</p>
+                    <p>С помощью ручки и бумаги мы это так просто не сможем сделать. Понадобится язык программирования Python. </p>
+                    <p>Давайте загрузим какой-нибудь рандомный датасет с сайта <b>Kaggle.com</b>, загрузим его, проверим на наличие <i>NaN</i> (Not a Number) элементов:</p>
+                    <div height="300" class="codeblock" readonly="true">import pandas as pd
+import numpy as np
+
+from sklearn.linear_model import LinearRegression
+df = pd.read_csv('train.csv')
+
+df.isna().any()
+# x False
+# y True
+
+df['y'].fillna(df['y'].median(), inplace=True)</div>
+                    <p>Хорошо, загрузили. Теперь давайте построим график, где будут отмечены данные в датасете точки:</p>
+                    <div class="codeblock" height="250" readonly="true">from matplotlib import pyplot as plt
+
+fig, ax = plt.subplots()
+ax.axhline(y=0, color='black')
+ax.axvline(x=0, color='black')
+ax.set_xlabel('x value')
+ax.set_ylabel('y value')
+plt.grid()
+plt.scatter(df['x'], df['y'])
+plt.show()</div>
+                    <img src="linear_regression/img/graph1.png">
+                    <p>Хмм... Вы тоже видите эту одинокую точку в правой части графика? Она из-за своего особенного расположения в будущем может смутить нашу модель, испортив обучение. Уберём этот элемент:</p>
+                    <div class="codeblock" height="100" readonly="true">garbage = (df['x'] / df['x'].mean() > 10).argmax()
+df.drop(garbage, inplace=True)</div>
+                    <p>С помощью ранее написанного кода построим график:</p>
+                    <img src="linear_regression/img/graph2.png">
+                    <p>Отлично! Чётко видна прямая, уравнение которой нам предстоит выяснить. Давайте обучим модель <strong>LinearRegression</strong> из библиотеки Sklearn:</p>
+                    <div height="120" class="codeblock" readonly="true">x, y = df['x'].to_numpy(), df['y'].to_numpy()
+lr = LinearRegression().fit(x.reshape(-1, 1), y)
+lr.coef_ # array([1.00065638])
+lr.intercept_ # -0.10726546430095141</div>
+                    <p>Итак, программа задала нам линейную функцию `y=ax+b`, где, по её мнению, `a \approx 1`, `b \approx -0.1`. Давайте построим график этой функции и сравним её положение с положением точек:</p>
+                    <div class="codeblock" height="250" readonly="true">fig, ax = plt.subplots()
+ax.axhline(y=0, color='black')
+ax.axvline(x=0, color='black')
+ax.set_xlabel('x value')
+ax.set_ylabel('y value')
+plt.grid()
+plt.scatter(x, y)
+# С помощью нашей модели применяем коэффициенты и
+# предсказываем y.
+plt.plot(x, lr.predict(x.reshape(-1, 1)), color='red')
+plt.show()</div>
+                    <p>Полученный график:</p>
+                    <img src="linear_regression/img/graph3.png">
+                    <p>Отличная работа! Прямая идеально идёт по намеченному пути! Вот таким образом и совершается линейная регрессия, вот оно что...</p>
+                
+                
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

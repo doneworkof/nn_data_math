@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="../css/popup.css" rel="stylesheet" type="text/css">
+        <link href="../css/article.css" rel="stylesheet" type="text/css">
+        <link href="../css/style.css" rel="stylesheet" type="text/css">    
+        <link href="../css/menu.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <main>
+            <div class="content">
+                <div class="article">
+                    <h1>Симулятор болезней</h1>
+                    <p>Привет, макарошка. Симулировать какие-либо реальные процессы бывает очень интересно. Сегодня мы создадим симулятор болезней на языке Python.</p>
+                    <p>Давайте напишем класс болезни. Начнём с написания конструктора класса заболевания:</p>
+                    <div class="codeblock" readonly="true" height="270">class Bacteria:
+    def __init__(self, name, formula, delta=1):
+        # Уровень развития болезни
+        self.level = 0
+        # Скорость развития болезни
+        self.delta = delta
+        # Имя болезни
+        self.name = name
+        # Формула подсчёта урона
+        self.formula = formula
+        # Показатель жизни
+        self.alive = True</div>
+                    <p>Ну, вначале, мы создаём экземпляр болезни с помощью следующих параметров: имя болезни (<b>name</b>), формула подсчёта наносимого носителю урона (<b>formula</b>) и скорость развития болезни (<b>delta</b>).</p>
+                    <p>Давайте рассмотрим метод <b>__init__</b>. Здесь мы сохраняем все полученные при создании экземпляра класса переменные, а также переменной <b>level</b> определяем уровень развития болезни. Переменная <b>alive</b> будет показывать, живо ли вообще заболевание, или уже сдохло.</p>
+                    <p>Добавим функцию <b>tick</b>:</p>
+                    <div class="codeblock" readonly="true" height="400">class Bacteria:
+    def __init__(self, name, formula, delta=1):
+        # Уровень развития болезни
+        self.level = 0
+        # Скорость развития болезни
+        self.delta = delta
+        # Имя болезни
+        self.name = name
+        # Формула подсчёта урона
+        self.formula = formula
+        # Показатель жизни
+        self.alive = True
+    
+    def tick(self):
+        # Обновляем болезнь и возвращаем урон
+        self.level += self.delta
+        return self.formula(self.level)</div>
+                    <p>Эта функция отвечает за события, произошедшие за единицу времени, а именно: развитие болезни на <b>delta</b> и определение наносимого человеку урона с помощью <b>formula</b>.</p>
+                    <p>Допишем наконец класс, добавив две вспомогательные функции: <b>downgrade</b> и <b>slow_down</b>:</p>
+                    <div class="codeblock" readonly="true" height="610">class Bacteria:
+    def __init__(self, name, formula, delta=1):
+        # Уровень развития болезни
+        self.level = 0
+        # Скорость развития болезни
+        self.delta = delta
+        # Имя болезни
+        self.name = name
+        # Формула подсчёта урона
+        self.formula = formula
+        # Показатель жизни
+        self.alive = True
+    
+    def tick(self):
+        # Обновляем болезнь и возвращаем урон
+        self.level += self.delta
+        return self.formula(self.level)
+    
+    def downgrade(self, amount):
+        # Совершаем деградацию заболевания
+        self.level -= amount
+        if self.level < 0 and self.alive:
+            self.alive = False
+    
+    def slow_down(self, amount):
+        # Замедляем процесс развития заболевания
+        self.delta = max(0, self.delta - amount)</div>
+                    <p>Функция <b>downgrade</b> позволяет совершить деградацию болезни, то бишь снизить её уровень развития на некую величину. Если тот станет отрицателен, заболевание умрёт.</p>
+                    <p>А с помощью функции <b>slow_down</b> можно замедлить развитие болезни на определённое число. В будущем иммунитет человека будет активно пользоваться данной возможностью, облегчая себе борьбу с недугом.</p>
+                    <p>Давайте опробуем наш класс болезни, задав ему различные функции развития болезни. Напишем код:</p>
+                    <div class="codeblock" readonly="true" height="430"># Импортируем нужные библиотеки
+from chemistry import *
+from math import * 
+from matplotlib import pyplot as plt
+
+# Создаём болезнь
+bacteria = Bacteria('Грипп', f)
+# Где f(l) - функция развития болезни
+
+# Устанавливаем временной промежуток в 100 дней
+days = 100
+
+values = [
+    bacteria.tick() for i in range(days)
+]
+
+# Строим график
+plt.plot(values)
+plt.show()</div>
+                <p>Хорошо, давайте для начала попробуем применить квадратичную функцию развития болезни `f(l) = l^2`. Тогда график развития получается такой:</p>
+                <img src="disease_simulator/img/graph1.png" res="400x_">
+                <p>График выглядит хорошо, стоит домножить `l^2` на какой-нибудь коэффициент `b`, чтобы урон от болезни не рос настолько быстро. Перейдём к другим функциям.</p>
+                <p>Ещё одна хорошая функция урона: `f(l) = min(l / 4, 20)`. Так урон будет расти линейно, но после 20 единиц уже не будет расти. Смотрим на график:</p>
+                <img src="disease_simulator/img/graph2.png" res="400x_">
+                <p>Выглядит неплохо. Но давайте сделаем какую-нибудь сезонную функцию вычисления урона. Для этого воспользуемся тригонометрической функцией <b>sin</b>. Вот моя идея: `f(l) = abs(20 * sin(l) + l)`. Модуль нам нужен для того, чтобы урон не был отрицателен.</p>
+                <img src="disease_simulator/img/graph3.png" res="400x_">
+                <p>Вот это уже интереснее! Пробуем: `f(l) = abs(min(l / 4, 20) * sin(l) + cos(l))`:</p>
+                <img src="disease_simulator/img/graph4.png" res="400x_">
+                <p>Оуу, неплохо! Это очень интересно, но давайте остановимся на самом простом варианте `f(l) = min(l / 4, 20)` и перейдём к созданию иммунитета человека.</p>
+                <p>Иммунитет человека будет характеризоваться одним числом `\alpha \in [0;1]`, которое характеризует силу иммунитета. При `\alpha=0` человек не сможет справляться даже с простыми болезнями, а при `\alpha=1` человек может побеждать тяжёлые заболевания.</p>
+                <p>Внутри у иммунитета есть переменная <b>owner</b>, которая ссылается на владельца иммунитета. Как раз в этом <b>owner</b> будет проходить борьба с болезнями.</p>
+                <div class="codeblock" readonly="true" height="650">class Immune:
+    def __init__(self, owner, strength=None):
+        # Сила иммунитета, F ∈ [0; 1]
+        self.strength = strength or uniform(0, 1)
+        # Владелец иммунитета
+        self.owner = owner
+
+    def downgrade_bacterias(self):
+        # Просчёт действия иммунитета
+        # На каждое из заболеваний
+        for bacteria in self.owner.bacterias:
+            alpha = self.strength ** 2
+            level_dgrad = alpha / 2
+            bacteria.downgrade(level_dgrad)
+            delta_dgrad = alpha / 4
+            bacteria.slow_down(delta_dgrad)
+
+    def delete_dead_bacterias(self):
+        # Удаление мёртвых болезней
+        delete_indices = [
+            i for i, b in enumerate(
+                self.owner.bacterias
+            ) if not b.alive
+        ]
+
+        for i in delete_indices[::-1]:
+            self.owner.bacterias.pop(i)
+
+    def heal_owner(self):
+        # Автоматическое лечение человека
+        delta_hp = self.strength * 0.9
+        self.owner.heal(delta_hp)
+
+    def tick(self):
+        # Обновление иммунитета
+        if not self.owner.alive:
+            return
+
+        self.downgrade_bacterias()
+        self.delete_dead_bacterias()
+        self.heal_owner()</div>
+                <p>Давайте разберёмся в функциях, здесь написанных. Функция <b>downgrade_bacterias</b> вызывается каждую единицу времени, чтобы замедлить болезнь и понизить её уровень на определённые величины, зависящие от силы иммунитета.</p>
+                <p>Функция <b>delete_dead_bacteries</b> просто удаляет мёртвые заболевания из организма человека.</p>
+                <p>Метод <b>health_owner</b> лечит хозяина иммунитета на некую величину, зависящую от силы иммунитета.</p>
+                <p>В методе <b>tick</b> проверяется, жив ли человек, а если жив, то происходит его защита вызовом трёх функций, перечисленных выше.</p>
+                <p>Давайте уже создадим класс <b>человека</b>:</p>
+                <div class="codeblock" readonly="true" height="650">class Human:
+    def __init__(self, name, immune_strength=None):
+        # Имя человека
+        self.name = name
+        # Единицы здоровья
+        self.hp = 100
+        # Список заболеваний
+        self.bacterias = []
+        # Показатель жизни
+        self.alive = True
+        # Инициализируем иммунитет
+        self.immune = Immune(self, immune_strength)
+    
+    def damage(self, amount):
+        # Наносим урон человеку
+        self.hp -= amount
+        if self.hp < 0 and self.alive:
+            self.alive = False
+            print(f'Гражданин {self.name} трагично умер.')
+    
+    def infect(self, bacteria):
+        # Заражаем человека
+        self.bacterias.append(bacteria)
+    
+    def heal(self, amount):
+        # Исцеляем человека (максимальное HP равно 100)
+        self.hp = min(self.hp + amount, 100)
+    
+    def tick(self):
+        # Обновление человека,
+        # Обработка заболеваний
+    
+        for bacteria in self.bacterias:
+            delta_health = bacteria.tick()
+            self.damage(delta_health)
+    
+        # Действия иммунитета
+        self.immune.tick()</div>
+                <p>Создавая экземпляр человека, мы должны указать его имя, а также мы можем передать туда силу иммунитета, чтобы она не генерировалась случайно.</p>
+                <p>Метод <b>damage</b> отвечает за нанесение урона человеку, <b>infect</b> – за его заражение, <b>heal</b> – за его исцеление.</p>
+                <p>В методе <b>tick</b>, который вызывается каждую единицу времени, мы рассчитываем, сколько урона нанесено человеку заболеваниями и уменьшаем значение здоровья на эту величину, а также обновляем иммунитет.</p>
+                <p>Готово! Все нужные нам классы написаны, теперь переходим к испытаниям.</p>
+                <div class="codeblock" readonly="true" height="650"># Импортируем нужные библиотеки
+from chemistry import *
+from human import *
+from math import * 
+from matplotlib import pyplot as plt
+
+# Создаём человека
+human = Human('Василий', immune_strength=0.5)
+
+# Создаём болезнь
+cholera = Bacteria('Холера', lambda l: min(l / 4, 20))
+
+# Заражаем человека
+human.infect(cholera)
+
+health_history = []
+
+for i in range(100):
+    # Обновляем человека
+    human.tick()
+    
+    if not human.alive:
+        break
+
+    current_hp = human.hp
+    is_infected = len(human.bacterias) > 0
+    
+    print('-' * 15)
+    print('День', i)
+    print(f'Здоровье: {current_hp} единиц')
+    print(f'Василий {"болен" if is_infected else "здоров"}')
+    
+    health_history.append(current_hp)
+
+# Строим график единиц HP
+plt.plot(health_history)
+plt.show()</div>
+                <p>В коде присутствуют комментарии, проясняющие работу тестирующей системы. Давайте же посмотрим на график изменения благосостояния нашего Василия, которого мы создали. Ему присвоена сила иммунитета `\alpha = 0.5`.</p>
+                <img src="disease_simulator/img/graph5.png" res="400x_">
+                <p>Как видите, Василий сначала сильно страдал от болезни, но затем иммунитет взял всё в свои руки и смог справиться с заболеванием. Давайте попробуем задать Василию силу иммунитета `\alpha = 0.1`.</p>
+                <img src="disease_simulator/img/graph6.png" res="400x_">
+                <p>Тут попытки иммунитета исправить ситуацию были бесполезны, Василий умер после примерно 25 дней мучения. Давайте снова сделаем силу иммунитета `\alpha = 0.5`, но теперь будем использовать другую функцию для рассчёта урона:</p>
+                <span class="math display">
+                    $$f(l) = \left|10 * sin(l) + 0.5 * l)\right|$$
+                </span>
+                <p>Посмотрим на график:</p>
+                <img src="disease_simulator/img/graph7.png" res="400x_">
+                <p>Воу, вот это уже очень интересно! Отчётливо видно, что теперь в некоторых моментах активность болезни снижается, за счёт чего Василию удаётся восстановить своё здоровье. Тем не менее, он умер примерно после 20 дней эксперимента.</p>
+                <p>Но что, если у Василия будет очень сильный иммунитет `\alpha = 0.9`?</p>
+                <img src="disease_simulator/img/graph8.png" res="400x_">
+                <p>Как можно увидеть, Василию очень быстро удаётся избавиться от болезни и восстановиться до максимального здоровья.</p>
+                <p>Ссылка на гитхаб проекта: <a href="https://github.com/doneworkof/disease_simulator">https://github.com/doneworkof/disease_simulator</a></p>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

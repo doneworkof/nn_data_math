@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Косинус | Главная</title>
+        <link href="css/popup.css" rel="stylesheet" type="text/css">
+        <link href="css/article.css" rel="stylesheet" type="text/css">
+        <link href="css/style.css" rel="stylesheet" type="text/css">    
+        <link href="css/menu.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <header>
+            <div class="menu">
+                <div class="wrapper">
+                    <a href="index.html" smooth>cos²β</a>
+                    <div class="search">
+                        <input class="inputfield" type="text" placeholder="Я ищу">
+                        <input class="searchbutton" type="button" onclick="Search()">
+                    </div>
+                    <div class="shortcuts">
+                        <input type="button" class="burger" onclick="OpenBurgerMenu()">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="content"></div>
+        </main>
+
+        <div class="popup">
+            <div class="popup-window side sidemenu">
+                <div class="part top">
+                    <div class="header">
+                        <h1>Меню</h1>
+                        <input type="button" onclick="CloseBurgerMenu()">
+                    </div>
+                    <ul class="menulist"></ul>
+                </div>
+                <div class="part bottom">
+                    <p class="info">Магазин 2020</p>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            document.location = 'all.html';
+        </script>
+        <script src="js/ace.js"></script>
+        <script src="js/base.js"></script>
+        <script src="js/article.js"></script>
+        <script src="articles.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>

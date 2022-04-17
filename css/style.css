@@ -1,0 +1,462 @@
+body {
+    margin:0;
+    padding:0;
+    font-family:"Trebuchet MS";
+    background:white;
+}
+
+body::-webkit-scrollbar {
+    width:10px;
+    background:transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+    background:#9c9c9c;
+    border-radius:10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
+body.disableScrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+
+h1 {
+    font-size:39px;
+    margin-top:30px;
+    margin-bottom:10px;
+}
+
+.text {
+    font-size:21px;
+}
+
+.loading::before {
+    content:"";
+    position:absolute;
+    background-image:url("../img/loading.png");
+    background-size:100% 100%;
+    top:70px;
+    width:36px;
+    height:36px;
+    left:calc(50% - 18px);
+    animation:loading .8s infinite linear, loading-appear .6s ease-in-out;
+}
+.end-loading::before {
+    animation:loading .8s infinite linear, loading-disappear .15s ease-in;
+}
+@keyframes loading {
+    to {
+        transform:rotate(360deg);
+    }
+}
+@keyframes loading-appear {
+    from {
+        opacity: 0;
+        margin-top:-10px;
+    }
+    to {
+        opacity: 1;
+        margin-top:0;
+    }
+}
+@keyframes loading-disappear {
+    from {
+        opacity: 1;
+        margin-top:0;
+    }
+    to {
+        opacity: 0;
+        margin-top:10px;
+    }
+}
+
+
+main {
+    position: relative;
+    top:95px;
+    box-sizing: border-box;
+    padding:0px 20px;
+    width:100%;
+    opacity: 0;
+    animation: appear 0.45s ease-in-out forwards;
+    animation-delay:0.1s;
+}
+
+main.center {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inputfield {
+    position: relative;
+    height:29px;
+
+    outline:none;
+    border:none;
+    background:white;
+
+    font: normal 21px "Trebuchet MS";
+    border-bottom:1px solid #8b8b8b;
+}
+
+.inputfield:focus {
+    border-bottom:1px solid #313131;
+}
+
+.inputfield::selection {
+    background:#c8c8c8;
+    border-radius:10px;
+}
+
+.product-holder {
+    width:100%;
+    max-width:1100px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 265px);
+    justify-content: center;
+    gap:15px;
+    margin: 0 auto 0 auto;
+}
+
+.product {
+    position:relative;
+    width:265px;
+    height:265px;
+    background:white;
+    overflow: hidden;
+    z-index:1;
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    cursor:pointer;
+    box-sizing: border-box;
+    transition:box-shadow .4s;
+}
+
+.product:hover {
+    box-shadow:0px 0px 3px 0px black;
+}
+
+.product.notAvailable:hover {
+    box-shadow:0px 0px 3px 0px #be0000;
+}
+
+.product .toCart {
+    position:absolute;
+    bottom:12px;
+    right:15px;
+    opacity:.85;
+    transition:opacity .35s, filter .35s;
+    z-index:1;
+}
+
+.product:hover .toCart {
+    opacity: 1;
+}
+
+.product img {
+    max-width:92%;
+    height:170px;
+    margin-top:3%;
+    object-fit:cover;
+    pointer-events: none;
+    user-select: none;
+}
+
+.product .information {
+    margin-top:5px;
+    margin-bottom:0;
+    user-select: none;
+    align-self:flex-start;
+    width:90%;
+    margin-left:4%;
+}
+
+.product .information .name {
+    font-size:29px;
+    font-weight: bold;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width:100%;
+    margin:0;
+}
+
+.product .information .cost {
+    margin-top:8px;
+    font-size:26px;
+    font-weight: bold;
+    margin-bottom:0;
+    max-width:90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.search-params {
+    display:none;
+    justify-content: center;
+    gap:20px;
+    align-items: center;
+    margin-bottom:20px;
+}
+
+.search-params p {
+    font-size:19px;
+    margin:0;
+}
+
+.search-params input {
+    outline:none;
+    border:1px grey solid;
+    cursor:pointer;
+    font:normal 18px "Trebuchet MS";
+    height:29px;
+    width:100px;
+    transition:filter .3s;
+} 
+
+.search-params input:hover {
+    filter:brightness(.95);
+}
+
+.failure-msg {
+    display:none;
+    margin-top:20px;
+    font-size:20px;
+    color:#353535;
+    text-align:center;
+}
+
+.catalog-header {
+    text-align:center;
+    margin-top:10px;
+    margin-bottom:20px;
+}
+
+.mainpage-heading {
+    margin-top:0;
+    margin-bottom:30px;
+    font-size:39px;
+    text-align:center;
+}
+
+.toCart {
+    outline:none;
+    border:none;
+    cursor:pointer;
+    border-radius:17px;
+    font:bold 22px "Trebuchet MS";
+    padding-left:48px;
+    padding-right:13px;
+    height: 36px;
+    background-color:gold;
+    background-image: url("../img/cart-add.png");
+    background-position: 12px center;
+    background-size:28px 28px;
+    background-repeat:no-repeat;
+    transition: filter .33s;
+}
+
+.toCart:hover {
+    filter:brightness(.90);
+}
+
+.toCart.disabled:hover {
+    filter:none;
+}
+
+.toCart.added {
+    font-weight:normal;
+    background-image: url("../img/cart-added.png");
+    background-color:#ffe44e;
+}
+
+.toCart.disabled {
+    font-weight:normal;
+    background-color:#c5c5c5;
+    color:grey;
+    cursor:not-allowed;
+    background-image: url("../img/cart-disabled.png");
+}
+
+.toCart.compact {
+    border-radius:50%;
+    padding:0;
+    height:41px;
+    width:41px;
+    background-size:26px 26px;
+    background-position: center;
+}
+
+@keyframes appear {
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
+}
+
+@keyframes disappear {
+    from {
+        opacity:1;
+    }
+    to {
+        opacity:0;
+    }
+}
+
+.button {
+    font:normal 19px "Trebuchet MS";
+    border:none;
+    border-radius:20px;
+    outline:none;
+    background:#f1f1f1; 
+    box-shadow:0px 0px 3px 0px black;
+    cursor:pointer;
+    transition:background .35s, box-shadow .35s;
+    margin-top:13px;
+    padding:4px 12px;
+}
+
+.button:hover {
+    background:#e2e2e2;
+    box-shadow: 0px 0px 4px 0px black;
+}
+
+
+@media(max-width:630px) {
+    .product-holder {
+        width:100%;
+        display:flex;
+        flex-direction: column;
+        gap:19px;
+    }
+    .product {
+        width:100%;
+        flex-direction: row;
+        height:115px;
+        padding: 0 1%;
+        gap:15px;
+        overflow:visible;
+    }
+    
+    .product:not(:last-child)::after {
+        position:absolute;
+        z-index:5;
+        content:"";
+        width:90%;
+        height:1px;
+        background:grey;
+        left:50%;
+        transform:translate(-50%);
+        top:calc(100% + 9px);
+
+    }
+    .product .information {
+        width:100%;
+        position:relative;
+        margin-top:12px;
+        margin-left:0;
+    }
+    .product .information .name {
+        position:absolute;
+        max-width:100%;
+    }
+    .product .information .cost{
+        font-size:29px;
+        margin-top:45px;
+    }
+
+    .product img {
+        height:100%;
+        margin-top:0;
+    }
+
+}   
+
+@media(max-width:470px) {
+    .product img {
+        max-width:30%;
+        height:auto;
+    }
+}
+
+@media(max-width:370px) {
+    .product img {
+        display:none;
+    }
+}
+
+.content hr {
+    width:96%;
+    margin-left:2%;
+    margin-top:35px;
+    margin-bottom:35px;
+}
+
+.product-group {
+    width:100%;
+
+}
+
+.product-group .group-header {
+    text-align:center;
+}
+
+.product-group .holder {
+    margin-top:15px;
+    display:flex;
+    justify-content: center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.hidden-frame {
+    position: absolute;
+    top:0;
+    left:0;
+    transform:translate(-100%, -100%);
+    visibility: hidden;
+}
+
+.result-holder {
+    display:flex;
+    flex-direction: column;
+    gap:20px;
+    width:100%;
+    margin-top:30px;
+}
+
+.article-tile {
+    display:flex;
+    flex-direction: column;
+    gap:3px;
+    width:100%;
+    box-shadow: 0px 0px 3px black;
+    background-color:#f7f7f7;
+    padding: 15px;
+    box-sizing: border-box;
+    color:black;
+    text-decoration: none;
+    transition: background-color .35s, box-shadow .35s; 
+}
+
+.article-tile:hover {
+    background-color: #dedede;
+    box-shadow: 0px 0px 4px black;
+}
+
+.article-tile .name {
+    font-size:25px;
+    margin-bottom:5px;
+}
+
+.article-tile .date, .article-tile .author {
+    font-size:17px;
+}
+
